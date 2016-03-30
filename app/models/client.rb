@@ -1,14 +1,8 @@
 class Client < ActiveRecord::Base
 
   scope :sort, -> (params) { order(params[:sort] ||= 'updated_at desc') }
-  scope :pagination, -> (params) do
-      params[:page] ||= 1
-      params[:per_page] ||= 25
-      page(params[:page]).per(params[:per_page])
-  end
-  scope :fetch, -> (params) { sort(params).pagination(params) }
-
-
+  scope :pagination, -> (params) { page(params[:page] ||= 1).per(params[:per_page] ||= 25) }
+  scope :fetch, -> (params = {}) { sort(params).pagination(params) }
 
   validates :name,      presence: true, length: { maximum: 255 }
   validates :sex,       inclusion: { in: [true, false],
